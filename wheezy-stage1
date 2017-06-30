@@ -12,18 +12,24 @@ CURIMG=stage1.$IMGFORMAT
 # Security for these keys doesn't matter: just using ssh as it's convenient 
 # It's not easy to disable authentication, so just use passwordless keys.
 
-# could be generated with dropbearkey -t dss -f 
-# ./etc/dropbear/dropbear_dss_host_key and base64 encoding the result
-DROPBEAR_DSS_KEY=$(cat <<EOF
-AAAAB3NzaC1kc3MAAACBANfidOdFkDa7co3actgF4sQ0R8sYTzQ5jLAx23nwy5HKDt5pzwXKnkjq
-wBm7/CsC7/WHozTlRSIwA+9jlZlteOUzALTUkICVA24rg90gjqiR5Gzqd6nSB1iKWjbTX5rxR+9j
-HcVzfp832HHTRJgthQ035Em+6lJJ4PpIgRhDDE2jAAAAFQDlWsVzKm4G24GQnGxDuhGsrC2i5wAA
-AIBelNlG6om0WZYsP9M1kA9DCaWaWVLVt/o7AeSjTT1/f7E2xwluPBRLqKMYdWab4EdkoZLL9QU/
-c4t6vRSYMZ8dxT8fpZ49HZLMrg6Defxb5Us6IaMGJwEXKx5s1p37S2SMs2oYLBAxtTv3a2WvVGxO
-mTFe6O1QV8C2/0Mml92S5wAAAIEAtaxaCnAIu1FJ4GJLAoKDQA2OZElYgMoD6WGn1JMYjdKa3xE0
-8pl/IBt+OTZ3TR8ifuB0NrS6jlSi6pZVeqauZyZIkiIJPBULcsXWm98meeQpi0sz+uVyGSxVcVGT
-icg5BSkoPHjAC4KrojvTKR85PPgW1rMeJ3sGgtSXsTVMEVQAAAAVALRiKgnxo7cCasEP41n3Kd3n
-/5PB
+# could be generated with dropbearkey -t rsa -f
+# ./etc/dropbear/dropbear_rsa_host_key and base64 encoding the result
+DROPBEAR_RSA_KEY=$(cat <<EOF
+AAAAB3NzaC1yc2EAAAADAQABAAABAQCALZwM1jtqQ8g6wU+aej1fnG2aXWyh5gWIaf0o7Ju0Sucv
+5xsFIUTn+4nLWUhcHwvsYo77VGkjmmPWEDW6oldnG9ZAKWa/Ubk42QDi1eS7VIh8pho73Y0pk7Gr
+tms04zPe1D7KWBJKToKRgrOPqI0aLE0WjU2OX2X9QHPDSsQ5lJvnE757bYg2kMopPpOH/NuQIYDP
+X/Gk/iIPK0z+xBs0LewYueAljnSzphUndyS41koo2RE1ZVHj+FCl0QklsuqB8ei8KBW6VSJXz9nU
+68njFsCBC9unnfr8AU0+DWVzQNNsP3dUn7PEG9uUWRcxG6fNAKkiKeyAC1ZE5Kfz6WaPAAABACCG
+MjoppCLnNyf9hErw6KDZqxAH07hTCyVdq5DWVP4PIZGMpVUMZ5UrxP+11IAXmqltKtXISfNwShP3
+wgJtDhuKOzfFqZ4zSPoNSkXEu4jzPrzOUwrMwXSC1wr4u0RMwI0yswoaBe4X9NaiYRi7Tq6M/jSS
+P1M4jsMPtzAfSSJI4JHh6ryx04CJnWz2lBDGXnldZFV25kyktkztkL+maurXdJFUSuUtDT3/tecw
+RQJIHc4+LEAA1IYOq6g01bNJUitERHHWtPnof13l6xEb2QY8LXAOiAC2eIeaN+TyEBnpuSxAeq1s
+IsyW48XhVl2cz05V8zOkfNm5KYSireMFrQkAAACBAKlxnjromVbC0FTW9s1dGdltsR6vgwrYTnxE
+pkLEWo3pbFTMFk7sX9NIJieGVY6jJVt+LJQCEVCGFEJMBnByJjmVFKTfTANzavanf7DHi4ygRJei
+voGuRLy/yMn0SZ3wkPWVuqMuTfUdQOmmlrclJA2OgiPVVR/GtFI4zMreJwYXAAAAgQDBp6Ed1qHZ
+xp4fLmVoYTzIw5LRPjGexNHHGDWQYu14+5+l3Z/4IJM71vPvCCez1V8oAUpRzRnSclLmTeY/Axtt
+kt67Y+9TKY7iwILinXXhtazHkJ16YBVEBbqMfc5S4C/oVlfkzNe32gnaimUW5r+rISQYBaUbsZLB
+6pOkMTDmSQ==
 EOF
 )
 
@@ -64,7 +70,7 @@ setup_dropbear() {
   ln -s dropbear scp &&
   cd "$OLDPWD" &&
   mkdir -p qemu_rootfs/etc/dropbear &&
-  printf "%s" "$DROPBEAR_DSS_KEY" | base64 -d > qemu_rootfs/etc/dropbear/dropbear_dss_host_key &&
+  printf "%s" "$DROPBEAR_RSA_KEY" | base64 -d > qemu_rootfs/etc/dropbear/dropbear_rsa_host_key &&
   printf "%s" "$PRIVATE_SSH_KEY" > qemu_arm_key &&
   chmod 600 qemu_arm_key &&
   printf "%s" "$PUBLIC_SSH_KEY" > qemu_arm_key.pub &&
